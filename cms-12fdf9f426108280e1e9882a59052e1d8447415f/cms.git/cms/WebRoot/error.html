@@ -18,6 +18,7 @@ function go(t,url)
 	//url设置跳转网址
 	document.write("<div id=text>页面跳转发生错误，将在<strong id='tt'></strong>秒后跳转至主页：<span id='link'></span></div>"); 
 	document.getElementById("link").innerHTML="<a href="+url+">"+url+"</a>"; 
+	
 	$(t,url); 
 }
 function $(t,url)
