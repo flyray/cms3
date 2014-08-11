@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="com.qllt.po.SubItem" table="subitem" lazy="true">
+		<id name="subItemID">
+			<generator class="identity"></generator>
+		</id>
+		<property name="subItemName"></property>
+		<many-to-one name="item" class="com.qllt.po.Item" column="itemID" cascade="none" lazy="false" ></many-to-one>
+		<property name="order" column="siorder"></property>
+		<property name="createTime"></property>
+	</class>	
+</hibernate-mapping>
+

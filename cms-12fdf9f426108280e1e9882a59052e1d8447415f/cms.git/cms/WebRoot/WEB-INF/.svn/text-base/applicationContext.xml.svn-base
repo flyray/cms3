@@ -1,0 +1,463 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+	<!-- 配置数据源 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver">
+		</property>
+		<property name="url" value="jdbc:mysql://localhost:3306/qllt">
+		</property>
+		<property name="username" value="root"></property>
+		<property name="password" value="123456"></property>
+	</bean>
+	<!-- 配置数据源 end -->
+
+	<!-- 配置sessionFactory -->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource">   <!--数据源配置 -->
+			<ref bean="dataSource" />
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+				<prop key="hibernate.show_sql">true</prop> <!-- 显示hql语句 -->
+				 <!-- 以下3句式开启Ehcach数据库缓存 -->
+			<!--	<prop key="hibernate.cache.use_query_cache">true</prop>
+                <prop key="hibernate.cache.use_second_level_cache">true</prop>
+                <prop key="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</prop> -->
+			</props>
+		</property>
+		<property name="mappingResources">		<!--关系映射文件 -->            <!-- 注入一个list集合 -->
+			<list>
+				<value>com/qllt/po/Admin.hbm.xml</value>            <!-- 一个数据库中表的对应文件，进而把数据库中得表和实体类进行关联 -->
+				<value>com/qllt/po/Item.hbm.xml</value>            <!-- 一个数据库中表的对应文件，进而把数据库中得表和实体类进行关联 -->
+				<value>com/qllt/po/SubItem.hbm.xml</value>            <!-- 一个数据库中表的对应文件，进而把数据库中得表和实体类进行关联 -->
+				<value>com/qllt/po/News.hbm.xml</value>
+				<value>com/qllt/po/Menu.hbm.xml</value>
+				<value>com/qllt/po/SubMenu.hbm.xml</value>
+				<value>com/qllt/po/Image.hbm.xml</value>
+				<value>com/qllt/po/AdminGroup.hbm.xml</value>            <!-- 一个数据库中表的对应文件，进而把数据库中得表和实体类进行关联 -->
+				<value>com/qllt/po/Log.hbm.xml</value>
+				<value>com/qllt/po/RecruitSchool.hbm.xml</value>
+				<value>com/qllt/po/RecruitRoom.hbm.xml</value>
+				<value>com/qllt/po/Question.hbm.xml</value>
+			</list>
+		</property>
+	</bean>
+	<!-- 配置sessionFactory end -->
+
+	<!-- 配置HibernateTemplate -->
+	<bean id="hibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />                      <!-- 注入SessionFactory实例对象 -->
+		</property>
+	</bean>
+	<!-- 配置HibernateTemplate end -->
+
+	<!-- 配置平台事务管理器 -->
+	<bean id="hibernateTransactionManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<!-- 配置平台事务管理器 end -->
+
+
+	<!-- 以上的这些在任何一个项目中都是不变的（基本上相同） -->
+	<!-- Item -->
+	<bean id="itemDAOTarger" class="com.qllt.dao.ItemDAOImpl">
+		<property name="hibernateTemplate">
+			<ref bean="hibernateTemplate"></ref>
+		</property>
+	</bean>
+	<bean id="itemDAO"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="hibernateTransactionManager" />        <!-- 为事务代理bean注入平台事务管理器 -->
+		</property>
+		<property name="transactionAttributes">              <!-- 设置事务属性 -->
+			<props>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+		<property name="target">
+			<ref bean="itemDAOTarger" />                             <!-- 为事务代理bean设置代理目标 -->
+		</property>
+	</bean>
+	<bean id="itemService" class="com.qllt.service.ItemServiceImpl">
+		<property name="itemDAO">
+			<ref bean="itemDAO" />                                         <!-- 为业务逻辑层注入数据访问层 -->
+		</property>
+	</bean>
+	<bean id="itemAction" class="com.qllt.action.ItemAction" scope="prototype">
+		<property name="itemService" ref="itemService"></property>
+	</bean>
+	<!-- Item end -->
+	<!-- SubItem -->
+	<bean id="subItemDAOTarger" class="com.qllt.dao.SubItemDAOImpl">
+		<property name="hibernateTemplate">
+			<ref bean="hibernateTemplate"></ref>
+		</property>
+	</bean>
+	<bean id="subItemDAO"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="hibernateTransactionManager" />        <!-- 为事务代理bean注入平台事务管理器 -->
+		</property>
+		<property name="transactionAttributes">              <!-- 设置事务属性 -->
+			<props>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+		<property name="target">
+			<ref bean="subItemDAOTarger" />                             <!-- 为事务代理bean设置代理目标 -->
+		</property>
+	</bean>
+	<bean id="subItemService" class="com.qllt.service.SubItemServiceImpl">
+		<property name="subItemDAO">
+			<ref bean="subItemDAO" />                                         <!-- 为业务逻辑层注入数据访问层 -->
+		</property>
+	</bean>
+	<bean id="subItemAction" class="com.qllt.action.SubItemAction"
+		scope="prototype">
+		<property name="subItemService" ref="subItemService"></property>
+		<property name="itemService" ref="itemService"></property>
+	</bean>
+	<!-- SubItem end -->
+	
+	<!-- News -->
+	<bean id="newsDAOTarger" class="com.qllt.dao.NewsDAOImpl">
+		<property name="hibernateTemplate">
+			<ref bean="hibernateTemplate"></ref>
+		</property>
+	</bean>	
+	<bean id="newsDAO" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="hibernateTransactionManager"/>        <!-- 为事务代理bean注入平台事务管理器 -->
+		</property>
+		<property name="transactionAttributes">              <!-- 设置事务属性 -->
+			<props>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+		<property name="target">
+			<ref bean="newsDAOTarger" />                             <!-- 为事务代理bean设置代理目标 -->
+		</property>
+	</bean>
+	<bean id="newsService" class="com.qllt.service.NewsServiceImpl">
+		<property name="newsDAO">
+			<ref bean="newsDAO"/>                                         <!-- 为业务逻辑层注入数据访问层 -->
+		</property>
+		<property name="adminDAO">
+			<ref bean="adminDAO"/>                                         <!-- 为业务逻辑层注入数据访问层 -->
+		</property>
+	</bean>
+	<bean id="newsAction" class="com.qllt.action.NewsAction" scope="prototype">
+		<property name="newsService" ref="newsService"></property>
+		<property name="itemService" ref="itemService"></property>
+		<property name="subItemService" ref="subItemService"></property>
+		<property name="recruitRoomService" ref="recruitRoomService"></property>
+		<property name="recruitSchoolService" ref="recruitSchoolService"></property>
+	</bean>
+	<!-- News end -->
+	<!-- Question -->
+	<bean id="questionDAOTarger" class="com.qllt.dao.QuestionDAOImpl">
+		<property name="hibernateTemplate">
+			<ref bean="hibernateTemplate"></ref>
+		</property>
+	</bean>	
+	<bean id="questionDAO" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="hibernateTransactionManager"/>        <!-- 为事务代理bean注入平台事务管理器 -->
+		</property>
+		<property name="transactionAttributes">              <!-- 设置事务属性 -->
+			<props>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+		<property name="target">
+			<ref bean="questionDAOTarger" />                             <!-- 为事务代理bean设置代理目标 -->
+		</property>
+	</bean>
+	<bean id="questionService" class="com.qllt.service.QuestionServiceImpl">
+		<property name="questionDAO">
+			<ref bean="questionDAO"/>                                         <!-- 为业务逻辑层注入数据访问层 -->
+		</property>
+	</bean>
+	<bean id="questionAction" class="com.qllt.action.QuestionAction" scope="prototype">
+		<property name="questionService" ref="questionService"></property>
+	</bean>
+	<!-- Question end -->
+	<!-- Log -->
+	<bean id="logDAOTarger" class="com.qllt.dao.LogDAOImpl">
+		<property name="hibernateTemplate">
+			<ref bean="hibernateTemplate"></ref>
+		</property>
+	</bean>
+	<bean id="logDAO"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="hibernateTransactionManager" />        <!-- 为事务代理bean注入平台事务管理器 -->
+		</property>
+		<property name="transactionAttributes">              <!-- 设置事务属性 -->
+			<props>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+		<property name="target">
+			<ref bean="logDAOTarger" />                             <!-- 为事务代理bean设置代理目标 -->
+		</property>
+	</bean>
+	<bean id="logService" class="com.qllt.service.LogServiceImpl">
+		<property name="logDAO">
+			<ref bean="logDAO" />                                         <!-- 为业务逻辑层注入数据访问层 -->
+		</property>
+	</bean>
+	<bean id="logAction" class="com.qllt.action.LogAction" scope="prototype">
+		<property name="logService" ref="logService"></property>
+	</bean>
+	<!-- Log end -->
+	<!-- Admin -->
+	<bean id="adminDAOTarger" class="com.qllt.dao.AdminDAOImpl">
+		<property name="hibernateTemplate">
+			<ref bean="hibernateTemplate"></ref>
+		</property>
+	</bean>
+	<bean id="adminDAO"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="hibernateTransactionManager" />        <!-- 为事务代理bean注入平台事务管理器 -->
+		</property>
+		<property name="transactionAttributes">              <!-- 设置事务属性 -->
+			<props>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+		<property name="target">
+			<ref bean="adminDAOTarger" />                             <!-- 为事务代理bean设置代理目标 -->
+		</property>
+	</bean>
+	<bean id="adminService" class="com.qllt.service.AdminServiceImpl">
+		<property name="adminDAO">
+			<ref bean="adminDAO" />                                         <!-- 为业务逻辑层注入数据访问层 -->
+		</property>
+	</bean>
+	<bean id="adminAction" class="com.qllt.action.AdminAction" scope="prototype">
+		<property name="adminService" ref="adminService"></property>
+		<property name="adminGroupService" ref="adminGroupService"></property>
+	</bean>
+	<!-- Admin end -->
+	<!-- AdminGroup -->
+	<bean id="adminGroupDAOTarger" class="com.qllt.dao.AdminGroupDAOImpl">
+		<property name="hibernateTemplate">
+			<ref bean="hibernateTemplate"></ref>
+		</property>
+	</bean>
+	<bean id="adminGroupDAO"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="hibernateTransactionManager" />        <!-- 为事务代理bean注入平台事务管理器 -->
+		</property>
+		<property name="transactionAttributes">              <!-- 设置事务属性 -->
+			<props>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+		<property name="target">
+			<ref bean="adminGroupDAOTarger" />                             <!-- 为事务代理bean设置代理目标 -->
+		</property>
+	</bean>
+	<bean id="adminGroupService" class="com.qllt.service.AdminGroupServiceImpl">
+		<property name="adminGroupDAO">
+			<ref bean="adminGroupDAO" />                                         <!-- 为业务逻辑层注入数据访问层 -->
+		</property>
+	</bean>
+	<bean id="adminGroupAction" class="com.qllt.action.AdminGroupAction"
+		scope="prototype">
+		<property name="adminGroupService" ref="adminGroupService"></property>
+		<property name="subItemService" ref="subItemService"></property>
+		<property name="itemService" ref="itemService"></property>
+	</bean>
+	<!-- adminGroup end -->
+	<!-- Image -->
+	<bean id="imageDAOTarger" class="com.qllt.dao.ImageDAOIml">
+		<property name="hibernateTemplate">
+			<ref bean="hibernateTemplate" />
+		</property>
+	</bean>
+	<bean id="imageDAO"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="hibernateTransactionManager" /><!-- 为事务代理bean注入事务管理器 -->
+		</property>
+		<property name="transactionAttributes"><!-- 设置事务属性 -->
+			<props>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+		<property name="target"><!--为事务代理bean设置目标bean -->
+			<ref bean="imageDAOTarger" />
+		</property>
+	</bean>
+	<bean id="imageService" class="com.qllt.service.ImageServiceIml">
+		<property name="imageDAO" ref="imageDAO"></property>
+	</bean>
+	<bean id="imageAction" class="com.qllt.action.ImageAction" scope="prototype">
+		<property name="imageService" ref="imageService"></property>
+	</bean>
+	<!-- Image end -->
+	<!-- Menu -->
+	<bean id="menuDAOTarger" class="com.qllt.dao.MenuDAOImpl">
+		<property name="hibernateTemplate">
+			<ref bean="hibernateTemplate" />
+		</property>
+	</bean>
+	<bean id="menuDAO"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="hibernateTransactionManager" /><!-- 为事务代理bean注入事务管理器 -->
+		</property>
+		<property name="transactionAttributes"><!-- 设置事务属性 -->
+			<props>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+		<property name="target"><!--为事务代理bean设置目标bean -->
+			<ref bean="menuDAOTarger" />
+		</property>
+	</bean>
+	<bean id="menuService" class="com.qllt.service.MenuServiceImpl">
+		<property name="menuDAO" ref="menuDAO"></property>
+	</bean>
+	<bean id="menuAction" class="com.qllt.action.MenuAction" scope="prototype">
+		<property name="menuService" ref="menuService"></property>
+	</bean>
+	<!-- Menu end -->
+	<!-- SubMenu -->
+	<bean id="subMenuDAOTarger" class="com.qllt.dao.SubMenuDAOImpl">
+		<property name="hibernateTemplate">
+			<ref bean="hibernateTemplate" />
+		</property>
+	</bean>
+	<bean id="subMenuDAO"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="hibernateTransactionManager" /><!-- 为事务代理bean注入事务管理器 -->
+		</property>
+		<property name="transactionAttributes"><!-- 设置事务属性 -->
+			<props>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+		<property name="target"><!--为事务代理bean设置目标bean -->
+			<ref bean="subMenuDAOTarger" />
+		</property>
+	</bean>
+	<bean id="subMenuService" class="com.qllt.service.SubMenuServiceImpl">
+		<property name="subMenuDAO" ref="subMenuDAO"></property>
+	</bean>
+	<bean id="subMenuAction" class="com.qllt.action.SubMenuAction" scope="prototype">
+		<property name="subMenuService" ref="subMenuService"></property>
+		<property name="menuService" ref="menuService"></property>
+	</bean>
+	<!-- SubMenu end -->
+	<!-- recruitSchool START -->
+	<bean id="recruitSchoolDAOTarger" class="com.qllt.dao.RecruitSchoolDAOImpl">
+		<property name="hibernateTemplate">
+			<ref bean="hibernateTemplate"></ref>
+		</property>
+	</bean>	
+	<bean id="recruitSchoolDAO" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="hibernateTransactionManager"/>        <!-- 为事务代理bean注入平台事务管理器 -->
+		</property>
+		<property name="transactionAttributes">              <!-- 设置事务属性 -->
+			<props>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+		<property name="target">
+			<ref bean="recruitSchoolDAOTarger" />                             <!-- 为事务代理bean设置代理目标 -->
+		</property>
+	</bean>
+	<bean id="recruitSchoolService" class="com.qllt.service.RecruitSchoolServiceImpl">
+		<property name="recruitSchoolDAO">
+			<ref bean="recruitSchoolDAO"/>                                         <!-- 为业务逻辑层注入数据访问层 -->
+		</property>
+		<!-- <property name="userDAO">
+			<ref bean="userDAO"/>                                         为业务逻辑层注入数据访问层
+		</property> -->
+	</bean>
+	<bean id="recruitSchoolAction" class="com.qllt.action.RecruitSchoolAction" scope="prototype">
+		<property name="recruitSchoolService" ref="recruitSchoolService"></property>
+	</bean>
+<!-- recruitSchool END -->
+	<!-- recruitRoom START -->
+	<bean id="recruitRoomDAOTarger" class="com.qllt.dao.RecruitRoomDAOImpl">
+		<property name="hibernateTemplate">
+			<ref bean="hibernateTemplate"></ref>
+		</property>
+	</bean>	
+	<bean id="recruitRoomDAO" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="hibernateTransactionManager"/>        <!-- 为事务代理bean注入平台事务管理器 -->
+		</property>
+		<property name="transactionAttributes">              <!-- 设置事务属性 -->
+			<props>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+		<property name="target">
+			<ref bean="recruitRoomDAOTarger" />                             <!-- 为事务代理bean设置代理目标 -->
+		</property>
+	</bean>
+	<bean id="recruitRoomService" class="com.qllt.service.RecruitRoomServiceImpl">
+		<property name="recruitRoomDAO">
+			<ref bean="recruitRoomDAO"/>                                         <!-- 为业务逻辑层注入数据访问层 -->
+		</property>
+	<!-- 	<property name="userDAO">
+			<ref bean="userDAO"/>                                         为业务逻辑层注入数据访问层
+		</property> -->
+	</bean>
+	<bean id="recruitRoomAction" class="com.qllt.action.RecruitRoomAction" scope="prototype">
+		<property name="recruitRoomService" ref="recruitRoomService"></property>
+							<!-- 	<property name="itemService" ref="itemService"></property> -->
+	</bean>
+<!-- recruitRoom END -->
+	<!-- topic end -->
+	<!-- 论坛首页 GoLTIndexAction -->
+	<bean id="staticAction" class="com.qllt.action.StaticAction" scope="prototype"> 
+		<property name="itemService" ref="itemService"></property>
+		<property name="subItemService" ref="subItemService"></property>
+		<property name="newsService" ref="newsService"></property>
+		<property name="menuService" ref="menuService"></property>
+		<property name="adminService" ref="adminService"></property>
+		<property name="subMenuService" ref="subMenuService"></property>
+		<property name="recruitRoomService" ref="recruitRoomService"></property>
+		<property name="recruitSchoolService" ref="recruitSchoolService"></property>
+		<property name="questionService" ref="questionService"></property>
+		
+	</bean>
+	<!-- 论坛首页 end -->
+
+	<!-- 拦截器实例化 -->
+	<bean id="newsInterceptor" class="com.qllt.interceptor.NewsInterceptor">
+		<property name="adminService" ref="adminService"></property>
+		<property name="logService" ref="logService"></property>
+	</bean>
+	<bean id="logInterceptor" class="com.qllt.interceptor.LogInterceptor">
+		<property name="adminService" ref="adminService"></property>
+	</bean>
+	<bean id="AdminControlInterceptor" class="com.qllt.interceptor.AdminControlInterceptor">
+		<property name="adminService" ref="adminService"></property>
+	</bean>
+	<!-- 拦截器实例化end -->
+	<!-- 搜索 -->
+	<bean id="searchAction" class="com.qllt.action.SearchAction">
+		<property name="newsService" ref="newsService"></property>
+	</bean>
+	<!-- 搜索end -->
+</beans>

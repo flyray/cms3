@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+ <class name="com.qllt.po.RecruitSchool" table="recruitschool">
+  <id name="recruitSchoolID"><generator class="identity"/> </id>
+  <property generated="never" lazy="false" name="recruitSchoolName"/>
+  <property generated="never" lazy="false" name="recruitSchoolNum"/>
+ </class>
+</hibernate-mapping>

@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+ <class name="com.qllt.po.News" table="news" lazy="true">
+	<!-- 必须紧跟class标签 -->
+<!--	<cache usage="read-only"/> 开启Ehcache缓存 -->
+	
+ 	<id name="newsID">
+ 		<generator class="identity"></generator>
+ 	</id>
+ 	<property name="title"></property>
+ 	<property name="content"></property>
+ 	<property name="createtime"></property>
+ 	<property name="settop"></property>
+ 	<property name="settoptime"></property>
+ 	<property name="link"></property>
+ 	<property name="islink"></property>
+ 	<property name="source"></property>
+ 	<property name="author"></property>
+ 	<many-to-one name="editor" class="com.qllt.po.Admin" cascade="none" column="adminID" lazy="proxy"></many-to-one> 
+ 	<property name="color"></property>
+ 	<many-to-one name="subItem" class="com.qllt.po.SubItem" cascade="none" column="subItemID" lazy="proxy"></many-to-one> 
+ 	<property name="isrecruit"></property> 
+ 	<property name="recrutTime"></property> 
+ 	<property name="recruitTimeEnd"></property> 
+ 	<property name="recruitAddress"></property> 
+ 	<property name="positionNum"></property>
+ 	<property name="bold"></property> 
+ </class>
+</hibernate-mapping>

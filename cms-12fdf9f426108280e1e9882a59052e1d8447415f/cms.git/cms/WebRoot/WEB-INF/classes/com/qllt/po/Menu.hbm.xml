@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.qllt.po.Menu" table="menu">
+        <id name="menuID">
+ 			<generator class="identity"></generator>
+ 		</id>       
+ 		<property name="menuName"></property>
+       	<property name="menuOrder"></property>
+       	<property name="createTime"></property>
+       	<property name="menuLink"></property>
+       	<bag name="submenus" order-by="subMenuOrder,createTime desc" lazy="true" cascade="none" inverse="true"><!-- 不能用list，否则会出现list.size()大于数据库记录数的问题， -->
+       		<key column="menuID"  not-null="true"/>
+       		<one-to-many class="com.qllt.po.SubMenu" />
+       	</bag>
+    </class>
+</hibernate-mapping>

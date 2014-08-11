@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<!-- 自定义package包，包括拦截器、全局result等 -->
+	<package name="mypackage" extends="struts-default">
+		<interceptors>
+			<interceptor name="adminInterceptor" class="com.qllt.interceptor.AdminInterceptor"></interceptor>
+			<interceptor name="newsInterceptor" class="com.qllt.interceptor.NewsInterceptor"></interceptor>
+   			<interceptor name="logInterceptor" class="com.qllt.interceptor.LogInterceptor"></interceptor>
+   			<interceptor name="adminControlInterceptor" class="com.qllt.interceptor.AdminControlInterceptor"></interceptor>
+			<interceptor-stack name="myDefaultStack">
+		    <interceptor-ref name="adminInterceptor"></interceptor-ref>
+		    <interceptor-ref name="defaultStack"></interceptor-ref>
+   			</interceptor-stack>
+		</interceptors>
+	    <default-interceptor-ref name="myDefaultStack"></default-interceptor-ref>                     <!-- 将自定义拦截器栈设置默认的拦截器 -->
+        <!-- 默认页面,action不匹配的时候 -->
+		<default-action-ref name="siteindex" />                          <!-- 默认action参考，就是当配置里的action都对应不上的时候，最后就会执行indexAction -->
+		<global-results>                       <!-- 全局结果页，所有action共用 -->
+            <result name="login" type="redirect">/admin/login.jsp</result>  
+            <result name="error">/admin/login.jsp</result>  
+            <result name="nopopedom">/admin/nopopedom.jsp</result> <!-- 没有权限页面 --> 
+            <result name="siteindex" type="redirect">/</result> <!-- 网站首页--> 
+        </global-results>
+        <!-- 异常页面 -->
+        <global-exception-mappings>
+            <exception-mapping exception="java.lang.Exception" result="siteindex"/>
+        </global-exception-mappings>
+	</package>
+	
+	 <!-- 后台包 -->
+	<package name="backPackage" extends="mypackage">  
+		<!-- 后台item -->
+		<action name="item_*" class="itemAction" method="{1}">
+			<result name="{1}_s">/admin/item.jsp</result>
+			<result name="add">/admin/item.jsp</result>
+			<result name="add_s" type="chain">item_findAll</result>
+			<result name="findAll_s">/admin/item.jsp</result>
+			<result name="find_s">/admin/item.jsp</result>
+			<result name="update_s" type="chain">item_findAll</result>
+			<result name="delete_s" type="chain">item_findAll</result>
+			<result name="input">/admin/item.jsp</result>
+		</action>
+		<!-- 后台subItem -->
+		<action name="subItem_*" class="subItemAction" method="{1}">
+			<result name="{1}_s">/admin/subItem.jsp</result>
+			<result name="add_s" type="chain">subItem_findAll</result>
+			<result name="update_s" type="chain">subItem_findAll</result>
+			<result name="delete_s" type="chain">subItem_findAll</result>
+			<result name="input">/admin/subItem.jsp</result>
+		</action>
+		<!-- 后台news -->
+		<action name="news_*" class="newsAction" method="{1}">
+			<result name="{1}_s">/admin/news.jsp</result>
+			<result name="add">/admin/news.jsp</result>
+			<result name="findAll_s">/admin/news.jsp</result>
+			<result name="find_s">/admin/news_find.jsp</result>
+			<result name="add_s">/admin/translate.jsp</result>
+			<result name="update_s">/admin/translate.jsp</result>
+			<result name="delete_s" type="chain">news_findAll</result>
+			<result name="settop_s" type="chain">news_findAll</result>
+			<result name="input">/admin/news.jsp</result>
+			
+			<result name="checkNewsAndPosition_s">/admin/newsCountManage.jsp</result>
+			<result name="checkNewsAndPositionByAuthor_s">/admin/newsCountManage.jsp</result>
+			<result name="divideByWeek_s" type="chain">news_checkNewsAndPosition</result>
+			
+			<result name="advancedSearch_s">/admin/news_advancedSearch_back.jsp</result>
+			
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+			<interceptor-ref name="adminInterceptor"></interceptor-ref>
+			<interceptor-ref name="newsInterceptor">
+				<!--设置要拦截的方法   -->
+				<param name="includeMethods">add,delete,update</param>
+			</interceptor-ref>
+		</action>
+		<!-- 后台admin -->
+		<action name="admin_*" class="adminAction" method="{1}">
+			<result name="{1}_s">/admin/admin.jsp</result>
+			<result name="add_s" type="chain">admin_findAll</result>
+			<result name="delete_s" type="chain">admin_findAll</result>
+			<result name="input">/admin/login.jsp</result>
+			<result name="logout_s">/admin/login.jsp</result>
+			<result name="checkSelf_s">/admin/checkSelf.jsp</result>
+			<result name="changePSWFind_s">/admin/changePSW.jsp</result>
+			<result name="changePSW_s">/admin/success.jsp</result>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+			<interceptor-ref name="adminControlInterceptor">
+				<param name="includeMethods">add,delete,update,find,findAll</param>
+			</interceptor-ref> 
+		</action>
+		<action name="adminGroup_*" class="adminGroupAction" method="{1}">
+			<result name="findAll_s">/admin/adminGroup.jsp</result>
+			<result name="add_s" type="chain">adminGroup_findAll</result>
+			<result name="delete_s" type="chain">adminGroup_findAll</result>
+			<result name="update_s" type="chain">adminGroup_findAll</result>
+			<result name="find_s">/admin/adminGroup_find.jsp</result>
+			<result name="look_s">/admin/adminGroup_look.jsp</result>
+			<result name="input">/admin/adminGroup.jsp</result>
+		</action>
+		<!-- 后台Image -->
+		<action name="image_*" class="imageAction" method="{1}">
+			<result name="show_stream" type="stream">
+				<param name="contentType">image/jpeg</param>
+				<param name="inputName">imageStream</param>
+			</result>
+			<result name="add_s" type="chain">image_findAll</result>
+			<result name="update_s" type="chain">image_findAll</result>
+			<result name="delete_s" type="chain">image_findAll</result>
+			<result name="findAll_s">/admin/indexImage.jsp</result>
+			<result name="input">/admin/indexImage.jsp</result>
+		</action>
+		<!-- 后台menu --> 
+		<action name="menu_*" class="menuAction" method="{1}">
+			<result name="{1}_s">/admin/menu.jsp</result>
+			<result name="add_s" type="chain">menu_findAll</result>
+			<result name="delete_s" type="chain">menu_findAll</result>
+			<result name="update_s" type="chain">menu_findAll</result>
+			<result name="input">/admin/menu.jsp</result>
+		</action>
+		<action name="submenu_*" class="subMenuAction" method="{1}">
+			<result name="findAll_s">/admin/submenu.jsp</result>
+			<result name="findMenuAll_s">/admin/submenu.jsp</result>
+			<result name="add_s" type="chain">submenu_findMenuAll</result>
+			<result name="delete_s" type="chain">submenu_findMenuAll</result>
+			<result name="update_s" type="chain">submenu_findMenuAll</result>
+			<result name="input">/admin/submenu.jsp</result>
+		</action>
+		<action name="log_*" class="com.qllt.action.LogAction" method="{1}">
+			<result name="find">/admin/log.jsp</result>
+			<result name="find_adminName">/admin/log_adminName_result.jsp</result>
+			<result name="find_news">/admin/log_news_result.jsp</result>
+			<result name="delete" type="chain">log_findAll</result>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+			<interceptor-ref name="logInterceptor"></interceptor-ref>
+		</action>
+		<!-- 后台recruitSchool -->
+		<action name="recruit_*" class="recruitSchoolAction" method="{1}">
+			<result name="add_s">/admin/recruitSchoolTest_s.jsp</result>
+			<result name="delete_s">/admin/recruitSchoolTest_s.jsp</result>
+			<result name="update_s">/admin/recruitSchoolTest_s.jsp</result>
+			<result name="find_s">/admin/recruitSchoolTest_s.jsp</result>
+			<result name="findAll_s">/admin/recruitSchoolTest_s.jsp</result>
+		</action>
+		
+		<!-- 后台recruitRoom -->
+		<!-- 后台recruitRoom -->
+		<action name="recruitRoom_*" class="recruitRoomAction" method="{1}">
+			<result name="add_s" type="chain">recruitRoom_findAll</result>
+			<result name="delete_s" type="chain">recruitRoom_findAll</result>
+		<!-- 	<result name="find_s"></result> -->
+			<result name="update_s" type="chain">recruitRoom_findAll</result>
+			<result name="findAll_s">/admin/recruitRoomManage.jsp</result>
+		</action>
+		<!-- 静态化static-->
+		<action name="static_*" class="staticAction" method="{1}">
+			<result name="find_items">/admin/StaticNewsList.jsp</result>
+			<result name="find_subItems">/admin/StaticNewsSubItemList.jsp</result>
+			<result name="success">/admin/success.jsp</result>
+		</action>
+		<!-- 后台question -->
+		<action name="question_*" class="questionAction" method="{1}">
+			<result name="find_s">/admin/question_find.jsp</result><!-- 所有提问 -->
+			<result name="findAll_s">/admin/question1.jsp</result><!-- 所有提问 -->
+			<result name="findAll1_s">/admin/question1.jsp</result><!-- 所有提问分类查询 -->
+			<result name="delete_s" type="chain">question_findAll</result>
+			<result name="update_s" >/admin/question_update_s.jsp</result>
+			<result name="findAll1Not_s">/admin/question2.jsp</result><!-- 分类未回复提问 -->
+			<result name="findAllNot_s">/admin/question2.jsp</result><!-- 分页所有未回复提问 -->
+			<result name="findAllNotAnswer_s">/admin/question2.jsp</result><!-- 不分页所有未回复提问 -->
+			<result name="update1_s" >/admin/question_update1_s.jsp</result><!-- 回复成功 -->
+			<result name="update1_f">/error.html</result><!-- 回复失败,最好另写一个 -->
+		</action>
+	</package>
+	
+	<!--后台登录入口，没有权限拦截   -->
+	<package name="noInterceptor" extends="struts-default">
+		<action name="admin_login"  class="adminAction" method="login">
+			<result name="login_s">/admin/main.jsp</result>
+			<result name="input">/admin/login.jsp</result>
+		</action>
+		<action name="news_findByKeyWords" class="newsAction" method="findByKeyWords">
+			<result name="findByKeyWords_s">/search/simpleSearch.jsp</result>
+			<result name="input">/admin/news_search.jsp</result>
+		</action>
+		<action name="search_*" class="searchAction" method="{1}">
+			<result name="success">/admin/searchResult.jsp</result>
+		</action>
+		<!-- 性能测试 -->
+		<!-- 性能测试 end -->
+		<action name="imagevalidate" class="com.qllt.action.ImageValidateAction"></action>
+		<action name="imageNumCheck" class="com.qllt.action.ImageValidateAction" method="numCheck"></action>
+	</package>
+	
+</struts>    

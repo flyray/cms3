@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+ <class name="com.qllt.po.Log" table="log">
+  <id name="logID">
+   	<generator class="identity"/>
+  </id>
+  <property generated="never"  name="adminName"/>
+  <property generated="never"  name="newsTitle"/>
+  <property generated="never"  name="method"/>
+  <property generated="never"  name="time"/>
+  <property generated="never"  name="ip"/>
+ </class>
+</hibernate-mapping>

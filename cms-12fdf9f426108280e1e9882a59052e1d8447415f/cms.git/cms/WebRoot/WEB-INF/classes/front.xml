@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="frontPackage" extends="struts-default">
+		<global-exception-mappings>
+            <exception-mapping exception="java.lang.Exception" result="/"/>
+        </global-exception-mappings>
+		<!-- Android新闻入口 -->
+		<action name="android_news_*" class="newsAction" method="{1}">
+		</action>
+		<action name="hehe_*" class="staticAction" method="{1}">
+			<result name="success">/success.jsp</result>
+		</action>
+		<!-- 前台question -->
+		<action name="question_add" class="questionAction" method="add">
+			<result name="add_s" type="redirect">/question/question_ok.html</result>
+			<result name="add_f" type="redirect">/question/index.html</result>
+		</action>
+	</package>
+</struts>    

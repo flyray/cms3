@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+ <class name="com.qllt.po.Image" table="image">
+ 	<id name="imageID">
+ 		<generator class="identity"></generator>
+ 	</id>
+ 	<property name="imageName"></property>
+ 	<property name="imageDescription"></property>
+ 	<property name="imageLink"></property>
+ 	<property name="imageBinary" type="binary"></property>
+ 	<property name="imageType"></property>
+ 	<property name="imageOrder"></property>
+ </class>
+</hibernate-mapping>

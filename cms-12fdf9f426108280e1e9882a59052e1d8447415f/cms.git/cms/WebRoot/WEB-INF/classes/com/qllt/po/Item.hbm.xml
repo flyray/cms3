@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+ <class name="com.qllt.po.Item" table="item">
+ 	<id name="itemID">
+ 		<generator class="identity"></generator>
+ 	</id>
+ 	<property name="itemName"></property>
+ 	<property name="order" column="itemOrder"></property>
+ 	<property name="createTime"></property>
+ </class>
+</hibernate-mapping>

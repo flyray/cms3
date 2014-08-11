@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+ <class name="com.qllt.po.Admin" table="admin" lazy="true">
+  <id name="adminID">
+   <generator class="identity"/>
+  </id>
+  <property generated="never"  name="adminName"/>
+  <property name="adminPassword" generated="never"  />
+  <many-to-one  name="adminGroup" class="com.qllt.po.AdminGroup" column="agid"></many-to-one>
+  <property name="phoneNum" generated="never"  />
+  <property name="email" generated="never"  />
+  <property name="sex" generated="never"  />
+  <property name="remarks" generated="never"  />
+  <property name="IDcard" generated="never"  />
+ </class>
+</hibernate-mapping>

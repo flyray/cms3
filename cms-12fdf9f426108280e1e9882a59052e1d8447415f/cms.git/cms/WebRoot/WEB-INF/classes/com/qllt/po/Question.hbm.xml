@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+ <class name="com.qllt.po.Question" table="question" lazy="true">
+  <id name="questionID">
+   <generator class="identity"/>
+  </id>
+  <property name="title" generated="never"/>
+  <property name="content" generated="never"/>
+  <property name="name" generated="never"/>
+  <property name="email" generated="never"/>
+  <property name="createTime" generated="never"/>
+  <property name="isshow" generated="never"/>
+  <property name="answer" generated="never"/>
+  <property name="classify" generated="never"/>
+  <property name="phone" generated="never"/>
+  <property name="replyperson" generated="never"/>
+  <property name="replytime" generated="never"/>
+  <property name="broadcast" generated="never"/>
+  <property name="showorder" generated="never"/>
+  <property name="settoptime" generated="never"/>
+ </class>
+</hibernate-mapping>

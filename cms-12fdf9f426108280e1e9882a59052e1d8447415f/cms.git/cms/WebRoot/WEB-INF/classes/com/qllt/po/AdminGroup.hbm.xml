@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+ <class name="com.qllt.po.AdminGroup" table="admingroup">
+  <id name="gid" column="gid">
+   <generator class="identity"/>
+  </id>
+  <property name="agName" column="agname" generated="never"  />
+  <property name="subitemList" column="subitems" generated="never"  />
+  <property generated="never"  name="popedom"/>
+ </class>
+</hibernate-mapping>

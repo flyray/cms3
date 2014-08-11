@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Language" content="zh-CN" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>山东大学就业信息网</title>
+<style type="text/css">
+body {margin:0px auto; text-align:center;}
+</style>
+</head>
+
+<body>
+<div id="center">
+<script type="text/javascript"> 
+function go(t,url)
+{
+	//t设置跳转时间：秒
+	//url设置跳转网址
+	document.write("<div id=text>页面跳转发生错误，将在<strong id='tt'></strong>秒后跳转至主页：<span id='link'></span></div>"); 
+	document.getElementById("link").innerHTML="<a href="+url+">"+url+"</a>"; 
+	$(t,url); 
+}
+function $(t,url)
+{
+	ta = t-1; 
+	tb = t + "000"; 
+	d = document.getElementById("tt"); 
+	d.innerHTML=t; 
+	window.setInterval(function(){go_to(url); },1000); 
+}
+function go_to(url)
+{
+	d.innerHTML=ta--; 
+	if(ta<0)
+	{
+		document.write("正在跳转至：<a href="+url+">"+url+"</a>"); 
+		location.href=url; 
+	}
+	else
+	{
+		return; 
+	}
+}
+</script> 
+<script type="text/javascript"> 
+	go(3, "http://www.job.sdu.edu.cn/"); 
+</script>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,12 @@
+eclipse.preferences.version=1
+encoding//WebRoot/admin/changePSW.jsp=UTF-8
+encoding//WebRoot/admin/checkSelf.jsp=UTF-8
+encoding//WebRoot/admin/css/common.css=UTF-8
+encoding//WebRoot/admin/css/question.css=UTF-8
+encoding//WebRoot/admin/login.jsp=UTF-8
+encoding//WebRoot/admin/main.jsp=UTF-8
+encoding//WebRoot/admin/news_advancedSearch_back.jsp=UTF-8
+encoding//WebRoot/admin/question_update_s.jsp=UTF-8
+encoding//WebRoot/error.html=UTF-8
+encoding//src/com/qllt/util/MD5.java=UTF-8
+encoding/<project>=UTF-8
